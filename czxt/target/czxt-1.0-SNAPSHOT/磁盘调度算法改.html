@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>磁盘调度算法模拟</title>
+    <script src="js/jquery.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/axios.js"></script>
+    <link rel="stylesheet" type="text/css" href="style1.css" />
+    <link rel="stylesheet" href="font_cqbiizu5og9/iconfont.css">
+
+</head>
+<body>
+    <div id="app">
+    <div v-show="flag1===0" id="xuanze">
+        <h1>选择磁道生成方式</h1>
+        <br>
+        <form name="select" style="font-size: 30px">
+            <input id="inp1" type="radio" name="inp" value="random" @click="hide()" ><label for="inp1">随机生成</label>
+            <input id="inp2" type="radio" name="inp" value="manual" @click="show()" ><label for="inp2">手动输入</label>
+            <br>
+            <br>
+            <div v-show="flag2===1" style="size: 20px">
+                <label for="t1">请输入磁道</label> <input id="t1" type="text" name="cidao" placeholder="请输入11个磁道">
+            </div>
+        </form>
+        <br>
+        <button id="bt1" @click="check()">确定</button>
+    </div>
+
+    <div v-show="flag1===1" id="suanfa">
+        <div class="shell">
+            <a href="#" id="b0" class="box"><i class="iconfont icon-cangku"></i><span>主菜单</span></a>
+            <a href="javascript:a.show1()" id="b1" class="box"><i class="iconfont icon-liebiao" ></i><span>先来先服务算法(FCFS)</span></a>
+            <a href="javascript:a.show2()" id="b2" class="box"><i class="iconfont icon-liebiao" ></i><span>最短寻道时间优先算法<br>(SSTF)</span></a>
+            <a href="javascript:a.show3()" id="b3" class="box"><i class="iconfont icon-liebiao" ></i><span>扫描算法(SCAN)</span></a>
+            <a href="javascript:a.show4()" id="b4" class="box"><i class="iconfont icon-liebiao" ></i><span>循环扫描算法(CSCAN)</span></a>
+        </div>
+    <div v-show="flag==1" id="d1" style="height: 100%; width: auto; display: none">
+        <h1>先来先服务调度算法(FCFS)</h1>
+        <div id="p11" class="p1">现要陆续请求访问以下磁道:</div><br>
+        <div id="p31" class="p3">动态访问模拟:</div><br>
+
+        <table id="ta1" align="center">
+
+        </table>
+
+        <img id="i1" class="im" src="箭头无背景.png" >
+        <br>
+        <br>
+        <br>
+        <br>
+        <div id="p41" class="p4">访问顺序为:</div><br>
+        <div id="p21" class="p2"></div><br>
+        <div id="p51" class="p5">总寻道长度为:</div><br>
+        <div id="p61" class="p6">平均寻道长度为:</div>
+        <button class="csh" @click="csh()">重新输入</button>
+        <button id=next1" class="next" @click="nexti()">开始</button>
+        <button class="random" @click="connect()">随机生成</button>
+        <button class="re" @click="r()">重新开始</button>
+    </div>
+
+    <div v-show="flag==2" id="d2" style="height: 100%; width: auto; display:none">
+        <h1>最短寻道时间优先算法(SSTF)</h1>
+        <div id="p12" class="p1">现要陆续请求访问以下磁道:</div><br>
+        <div id="p32" class="p3">动态访问模拟:</div><br>
+        <table id="ta2" align="center">
+
+        </table>
+        <img id="i2" class="im" src="箭头无背景.png" >
+        <br>
+        <br>
+        <br>
+        <br>
+        <div id="p42" class="p4">访问顺序为:</div><br>
+        <div id="p22" class="p2"></div><br>
+        <div id="p52" class="p5">总寻道长度为:</div><br>
+        <div id="p62" class="p6">平均寻道长度为:</div>
+        <button class="csh" @click="csh()">重新输入</button>
+        <button id="next2" class="next" @click="nexti()">开始</button>
+        <button class="random" @click="connect()">随机生成</button>
+        <button class="re" @click="r()">重新开始</button>
+    </div>
+
+    <div v-show="flag==3" id="d3" style="height: 100%; width: auto; display: none">
+        <h1>扫描算法(SCAN)</h1>
+        <div id="p13" class="p1">现要陆续请求访问以下磁道:</div><br>
+        <span class="p8">请选择扫描方向:</span>
+        <button id="bl3" class="b3" @click="fxxz(1)">左</button>
+        <button id="br3" class="b3" @click="fxxz(2)">右</button><br>
+        <div id="p33" class="p3">动态访问模拟:</div><br>
+        <table id="ta3" align="center">
+
+        </table>
+        <img id="i3" class="im" src="箭头无背景.png" >
+        <br>
+        <br>
+        <br>
+        <br>
+        <div id="p73" class="p7">当前扫描方向为:</div><br>
+        <div id="p43" class="p4">访问顺序为:</div><br>
+        <div id="p23" class="p2"></div><br>
+        <div id="p53" class="p5">总寻道长度为:</div><br>
+        <div id="p63" class="p6">平均寻道长度为:</div>
+        <button class="csh" @click="csh()">重新输入</button>
+        <button id="next3" class="next" @click="nexti()">开始</button>
+        <button class="random" @click="connect()">随机生成</button>
+        <button class="re" @click="r()">重新开始</button>
+    </div>
+
+    <div v-show="flag==4" id="d4" style="height: 100%; width: auto; display: none">
+        <h1>循环扫描算法(CSCAN)</h1>
+        <div id="p14" class="p1">现要陆续请求访问以下磁道:</div><br>
+        <span class="p8">请选择扫描方向:</span>
+        <button id="bl4" class="b3" @click="fxxz(1)">左</button>
+        <button id="br4" class="b3" @click="fxxz(2)">右</button>
+        <div id="p34" class="p3">动态访问模拟:</div><br>
+        <table id="ta4" align="center">
+
+        </table>
+        <img id="i4" class="im" src="箭头无背景.png" >
+        <br>
+        <br>
+        <br>
+        <br>
+        <div id="p74" class="p7">当前扫描方向为:</div><br>
+        <div id="p44" class="p4">访问顺序为:</div><br>
+        <div id="p24" class="p2"></div><br>
+        <div id="p54" class="p5">总寻道长度为:</div><br>
+        <div id="p64" class="p6">平均寻道长度为:</div>
+        <button class="csh" @click="csh()">重新输入</button>
+        <button id="next4" class="next" @click="nexti()">开始</button>
+        <button class="random" @click="connect()">随机生成</button>
+        <button class="re" @click="r()">重新开始</button>
+    </div>
+    </div>
+    </div>
+
+<script type="text/javascript">
+    var i=[0,0,0,0];
+    var sum=[0,0,0,0];//记录总寻道长
+    var avg=[0,0,0,0];//记录平均寻道长
+    a =new Vue({
+        el:"#app",
+        data(){
+            return{
+                flag1:0,
+                flag2:0,
+                flag:1,
+                rands:{},
+                fx:[0,0]
+            }
+        },
+       /* mounted(){
+            this.connect()
+        },*/
+        methods:{
+            show(){
+                this.flag2=1;
+            },
+            hide(){
+                this.flag2=2;
+            },
+            check(){
+                if (this.flag2===0) {
+                    alert("请选择输入方式！");
+                    return;
+                }
+                if (this.flag2===1){
+                    let num = $("#t1").val().trim().split(/[ ]+/);
+                    if(num.length!=11)
+                    {
+                        alert("请输入11个磁道！");
+                        return;
+                    }
+                    for (let i=0;i<num.length;i++){
+                        let pat = /^[1-9][0-9]*$/
+                        if(!pat.test(num[i])){
+                            alert("请输入正确的磁道！");
+                            return;
+                        }
+                    }
+                }
+                if (this.flag2===2){
+                    this.connect();
+                }
+                if(this.flag2===1){
+                    this.connect1();
+                }
+                this.flag1=1;
+            },
+            show1(){
+              this.flag=1;
+            },
+            show2(){
+                this.flag=2;
+            },
+            show3(){
+                this.flag=3;
+            },
+            show4(){
+                this.flag=4;
+            },
+            connect(){
+                this.re();
+               /*axios({
+                    method:"post",
+                    data: "id:0,charb:[1,5,65,15,2]",
+                   dataType:JSON,
+                    url:"http://localhost:8080/czxt_war_exploded/mainServlet"*/
+                let param = new URLSearchParams();
+                param.append("id","0");
+                param.append("charb",JSON.stringify(avg));
+                axios.post("http://localhost:8080/czxt_war_exploded/mainServlet",param
+                ).then(function(resp){
+                    this.rands = resp.data;
+                    for (let k=0;k<11;k++)
+                        for (let i=0;i<4;i++)
+                            $(".p1")[i].innerHTML+=rands.ran[k]+" ";
+                    for(let k=1;k<5;k++) {
+                        document.getElementById("ta"+k).innerHTML = "<tr>\n" +
+                            "                <td><span id=td"+k+"1 class=\"tr"+k+"1\">" + rands.sor[0] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"2 class=\"tr"+k+"1\">" + rands.sor[1] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"3 class=\"tr"+k+"1\">" + rands.sor[2] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"4 class=\"tr"+k+"1\">" + rands.sor[3] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"5 class=\"tr"+k+"1\">" + rands.sor[4] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"6 class=\"tr"+k+"1\">" + rands.sor[5] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"7 class=\"tr"+k+"1\">" + rands.sor[6] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"8 class=\"tr"+k+"1\">" + rands.sor[7] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"9 class=\"tr"+k+"1\">" + rands.sor[8] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"10 class=\"tr"+k+"1\">" + rands.sor[9] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"11 class=\"tr"+k+"1\">" + rands.sor[10] + "</span></td>\n" +
+                            "            </tr>"
+                    }
+                    })
+            },
+            connect1(){
+                let num = $("#t1").val().trim().split(/[ ]+/);
+                let param = new URLSearchParams();
+                param.append("id","1");
+                param.append("charb",JSON.stringify(num));
+                axios.post("http://localhost:8080/czxt_war_exploded/mainServlet",param
+                ).then(function(resp){
+                    this.rands = resp.data;
+                    for (let k=0;k<11;k++)
+                        for (let i=0;i<4;i++)
+                            $(".p1")[i].innerHTML+=rands.ran[k]+" ";
+                    for(let k=1;k<5;k++) {
+                        document.getElementById("ta"+k).innerHTML = "<tr>\n" +
+                            "                <td><span id=td"+k+"1 class=\"tr"+k+"1\">" + rands.sor[0] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"2 class=\"tr"+k+"1\">" + rands.sor[1] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"3 class=\"tr"+k+"1\">" + rands.sor[2] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"4 class=\"tr"+k+"1\">" + rands.sor[3] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"5 class=\"tr"+k+"1\">" + rands.sor[4] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"6 class=\"tr"+k+"1\">" + rands.sor[5] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"7 class=\"tr"+k+"1\">" + rands.sor[6] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"8 class=\"tr"+k+"1\">" + rands.sor[7] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"9 class=\"tr"+k+"1\">" + rands.sor[8] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"10 class=\"tr"+k+"1\">" + rands.sor[9] + "</span></td>\n" +
+                            "                <td><span id=td"+k+"11 class=\"tr"+k+"1\">" + rands.sor[10] + "</span></td>\n" +
+                            "            </tr>"
+                    }
+                })
+            },
+            re() {
+                $(".next").attr("disabled", false);
+                $(".next").text("开始");
+                for (let k = 0; k < 4; k++) {
+                    i[k] = 0;
+                    sum[k] = 0;
+                    avg[k] = 0;
+                    $(".p2")[k].innerHTML = "";
+                    $(".p1")[k].innerHTML = "现要陆续请求访问以下磁道:";
+                    $(".p5")[k].innerHTML = "总寻道长度为:";
+                    $(".p6")[k].innerHTML = "平均寻道长度为:";
+                    if(k===2||k===3)
+                    {
+                        let f=k+1;
+                        $("#bl"+f).attr("disabled",false);
+                        $("#br"+f).attr("disabled",false);
+                        $("#bl"+f).attr("class","b3");
+                        $("#br"+f).attr("class","b3");
+                        this.fx[f-3]=0;
+                        $("#p7"+f)[0].innerHTML ="当前扫描方向为:";
+                    }
+                }
+            },
+            csh(){
+                window.location.reload(true);
+            },
+            r(){
+                let k=this.flag-1;
+                let f=this.flag;
+                $("#next"+f).attr("disabled", false);
+                $("#next"+f).text("开始");
+                    i[k] = 0;
+                    sum[k] = 0;
+                    avg[k] = 0;
+                    $(".p2")[k].innerHTML = "";
+                    $(".p5")[k].innerHTML = "总寻道长度为:";
+                    $(".p6")[k].innerHTML = "平均寻道长度为:";
+                    if(f===3||f===4)
+                    {
+                        $("#bl"+f).attr("disabled",false);
+                        $("#br"+f).attr("disabled",false);
+                        $("#bl"+f).attr("class","b3");
+                        $("#br"+f).attr("class","b3");
+                        this.fx[f-3]=0;
+                        $("#p7"+f)[0].innerHTML ="当前扫描方向为:";
+                    }
+            },
+            fxxz(k){
+                let f=this.flag;
+              if(k==1) {
+                  this.fx[f-3] = 1;
+                  $("#p7"+f)[0].innerHTML += "左";
+                  $("#bl"+f).attr("class","b3 red");
+              }
+              else if(k==2) {
+                  this.fx[f-3] = 2;
+                  $("#p7"+f)[0].innerHTML += "右";
+                  $("#br"+f).attr("class","b3 red");
+              }
+              $("#bl"+f).attr("disabled",true);
+              $("#br"+f).attr("disabled",true);
+            },
+            nexti(){
+                var r;
+                var f=this.flag-1;
+                if(this.flag===1)
+                    r=rands.ran;
+                else if(this.flag===2)
+                    r=rands.sht;
+                else if(this.flag===3)
+                {
+                    if(this.fx[0]==1)
+                        r=rands.scal;
+                    else if(this.fx[0]==2)
+                        r=rands.scar;
+                    else
+                    {
+                        alert("请选择扫描方向！");
+                        return;
+                    }
+                }
+                else if(this.flag===4)
+                {
+                    if(this.fx[1]==1)
+                        r=rands.cscal;
+                    else if(this.fx[1]==2)
+                        r=rands.cscar;
+                    else
+                    {
+                        alert("请选择扫描方向！");
+                        return;
+                    }
+                }
+                var next;
+                $(".tr"+(f+1)+"1").each(function (){
+                    if ($(this).text() == r[i[f]]) {
+                        next = $(this)[0].id;
+                    }
+                })
+                $("#next"+(f+1)).text("继续");
+                i[f]++;
+                if (i[f] > 10)
+                {
+                    $("#next"+(f+1)).attr("disabled", true);
+                    $("#next "+(f+1)).text("已结束");
+                }
+                let adr = document.getElementById(next).getBoundingClientRect().left;
+                $("#i"+(f+1)).animate({left:adr});
+                if(i[f]==1)
+                    $(".p2")[f].innerText +=r[i[f]-1];
+                else
+                {
+                    sum[f]+=Math.abs(r[i[f]-1]-r[i[f]-2]);
+                    $(".p2")[f].innerHTML +="---->"+r[i[f]-1];
+                }
+                if(i[f]==11)
+                {
+                    avg[f]=sum[f]/10;
+                    $(".p5")[f].innerHTML+=sum[f];
+                    $(".p6")[f].innerHTML+=avg[f];
+                }
+            }
+        }
+    })
+
+</script>
+</body>
+</html>
